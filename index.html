@@ -3,109 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rotan AAT | Advanced Supply Chain System</title>
+    <title>Rotan AAT - Advanced SCM System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        .login-bg { background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1596422846543-75c6fc197f07?q=80&w=2000'); background-size: cover; background-position: center; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .login-bg { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1596422846543-75c6fc197f07?q=80&w=2000'); background-size: cover; }
         .tab-content { display: none; }
         .active-tab { display: block; }
-        .sidebar-btn { transition: all 0.2s; }
-        .sidebar-active { background: #059669; color: white; }
+        .nav-active { background: #059669; color: white; border-radius: 12px; }
+        .data-card { transition: transform 0.2s; }
+        .data-card:hover { transform: translateY(-5px); }
     </style>
 </head>
-<body class="bg-gray-50 text-slate-800">
+<body class="bg-slate-50">
 
     <div id="login-container" class="min-h-screen flex items-center justify-center login-bg px-4">
-        <div class="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-sm border border-slate-100">
-            <h2 class="text-2xl font-bold text-center mb-8">Rotan AAT System</h2>
+        <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-sm border">
+            <h2 class="text-2xl font-bold text-center mb-1">Rotan AAT System</h2>
+            <p class="text-xs text-center text-slate-400 mb-8">Supply Chain Management Engine</p>
             <form id="loginForm" class="space-y-4">
-                <input type="text" id="username" required placeholder="Username" class="w-full p-3 border rounded-xl bg-slate-50 focus:ring-2 ring-emerald-600 outline-none">
-                <input type="password" id="password" required placeholder="Password" class="w-full p-3 border rounded-xl bg-slate-50 focus:ring-2 ring-emerald-600 outline-none">
-                <button type="submit" class="w-full py-3 bg-emerald-900 text-white rounded-xl font-bold hover:bg-emerald-800 transition">MASUK</button>
+                <input type="text" id="uname" required placeholder="Username" class="w-full p-4 border rounded-xl bg-slate-50 outline-none focus:ring-2 ring-emerald-600">
+                <input type="password" id="pword" required placeholder="Password" class="w-full p-4 border rounded-xl bg-slate-50 outline-none focus:ring-2 ring-emerald-600">
+                <button type="submit" class="w-full py-4 bg-emerald-900 text-white rounded-xl font-bold hover:bg-emerald-800 transition">LOGIN SISTEM</button>
             </form>
         </div>
     </div>
 
-    <div id="dashboard-container" class="hidden flex min-h-screen">
+    <div id="app-container" class="hidden flex min-h-screen">
         <aside class="w-72 bg-slate-950 text-white p-6 flex flex-col">
             <h1 class="text-xl font-bold text-emerald-400 mb-10"><i class="fa-solid fa-leaf mr-2"></i>Rotan AAT Core</h1>
-            <nav class="space-y-2 flex-1">
-                <button onclick="showTab('beranda')" class="sidebar-btn w-full text-left p-4 rounded-xl sidebar-active" id="btn-beranda">Ringkasan Operasional</button>
-                <button onclick="showTab('analisis')" class="sidebar-btn w-full text-left p-4 rounded-xl hover:bg-slate-800" id="btn-analisis">Analisis Supply Chain</button>
-                <button onclick="showTab('pengiriman')" class="sidebar-btn w-full text-left p-4 rounded-xl hover:bg-slate-800" id="btn-pengiriman">Logistik & Distribusi</button>
-                <button onclick="showTab('recycle')" class="sidebar-btn w-full text-left p-4 rounded-xl hover:bg-slate-800" id="btn-recycle">Reverse Logistics</button>
-                <button onclick="showTab('stok')" class="sidebar-btn w-full text-left p-4 rounded-xl hover:bg-slate-800" id="btn-stok">Inventaris Rotan</button>
+            <nav class="space-y-2 flex-1" id="nav-controller">
+                <button onclick="changeTab('beranda')" class="nav-btn w-full text-left p-4 rounded-xl nav-active" id="btn-beranda">Ringkasan Utama</button>
+                <button onclick="changeTab('analisis')" class="nav-btn w-full text-left p-4 rounded-xl hover:bg-slate-800" id="btn-analisis">Analisis Supply Chain</button>
+                <button onclick="changeTab('logistik')" class="nav-btn w-full text-left p-4 rounded-xl hover:bg-slate-800" id="btn-logistik">Monitoring Pengiriman</button>
+                <button onclick="changeTab('recycle')" class="nav-btn w-full text-left p-4 rounded-xl hover:bg-slate-800" id="btn-recycle">Reverse Logistics</button>
+                <button onclick="changeTab('stok')" class="nav-btn w-full text-left p-4 rounded-xl hover:bg-slate-800" id="btn-stok">Inventaris Produk</button>
             </nav>
         </aside>
 
         <main class="flex-1 p-10 overflow-y-auto">
             <header class="flex justify-between items-center mb-8">
-                <h2 id="header-title" class="text-3xl font-bold">Ringkasan Operasional</h2>
-                <div id="sync-status" class="text-xs font-bold bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full">SISTEM AKTIF</div>
+                <h2 id="page-title" class="text-3xl font-bold">Ringkasan Utama</h2>
+                <div id="sync-status" class="px-4 py-2 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full">SISTEM AKTIF</div>
             </header>
 
             <div id="tab-beranda" class="tab-content active-tab space-y-6">
                 <div class="grid grid-cols-4 gap-6">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100"><p class="text-xs text-slate-400">Total Produksi</p><h3 class="text-2xl font-bold" id="kpi-prod">0</h3></div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100"><p class="text-xs text-slate-400">Jejak Karbon (Kg)</p><h3 class="text-2xl font-bold" id="kpi-co2">0</h3></div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100"><p class="text-xs text-slate-400">Ritase</p><h3 class="text-2xl font-bold" id="kpi-rit">0</h3></div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100"><p class="text-xs text-slate-400">Stok Produk</p><h3 class="text-2xl font-bold" id="kpi-stok">0</h3></div>
+                    <div class="data-card bg-white p-6 rounded-2xl border"><p class="text-xs text-slate-400">Total Produksi</p><h3 class="text-2xl font-bold" id="kpi-prod">0</h3></div>
+                    <div class="data-card bg-white p-6 rounded-2xl border"><p class="text-xs text-slate-400">Jejak Karbon (Kg)</p><h3 class="text-2xl font-bold text-rose-600" id="kpi-co2">0</h3></div>
+                    <div class="data-card bg-white p-6 rounded-2xl border"><p class="text-xs text-slate-400">Ritase</p><h3 class="text-2xl font-bold" id="kpi-rit">0</h3></div>
+                    <div class="data-card bg-white p-6 rounded-2xl border"><p class="text-xs text-slate-400">Stok Produk</p><h3 class="text-2xl font-bold" id="kpi-stok">0</h3></div>
                 </div>
-                
-                <div class="grid grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border">
-                        <h3 class="font-bold mb-4">Pengiriman On-Process</h3>
-                        <div id="process-list" class="space-y-2 text-sm"></div>
-                    </div>
+                <div class="bg-white p-8 rounded-2xl border">
+                    <h3 class="font-bold mb-4">Pengiriman Sedang Berjalan (On-Process Logistics)</h3>
+                    <div id="active-list" class="space-y-3"></div>
                 </div>
             </div>
 
-            </main>
+            <div id="tab-analisis" class="tab-content"><div class="bg-white p-6 rounded-2xl border"><table class="w-full text-left" id="table-analisis"><thead><th>Bulan</th><th>Produksi</th><th>Emisi</th></thead><tbody></tbody></table></div></div>
+        </main>
     </div>
 
     <script>
-        const SUPABASE_URL = "ISI_URL_SUPABASE_MU";
-        const SUPABASE_KEY = "ISI_KEY_SUPABASE_MU";
-        const _db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // CONFIG
+        const SUPABASE_URL = "ISI_URL_MU";
+        const SUPABASE_KEY = "ISI_KEY_MU";
+        const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // LOGIN ENGINE
         document.getElementById('loginForm').onsubmit = (e) => {
             e.preventDefault();
-            if(document.getElementById('username').value === "admin" && document.getElementById('password').value === "admin123") {
+            if(document.getElementById('pword').value === "admin123") {
                 document.getElementById('login-container').classList.add('hidden');
-                document.getElementById('dashboard-container').classList.remove('hidden');
-                initEngine();
+                document.getElementById('app-container').classList.remove('hidden');
+                runEngine();
             }
         };
 
-        // NAVIGATION ENGINE
-        function showTab(id) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
-            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('sidebar-active'));
-            document.getElementById('tab-' + id).classList.add('active-tab');
-            document.getElementById('btn-' + id).classList.add('sidebar-active');
-        }
-
-        // DATA ENGINE
-        async function initEngine() {
-            // Fetch dari 4 tabel Supabase
-            const tables = ['analisis_supply_chain', 'monitoring_pengiriman', 'pengembalian_kemasan', 'manajemen_stok'];
-            const res = await Promise.all(tables.map(t => _db.from(t).select('*')));
+        // CORE ENGINE
+        async function runEngine() {
+            // 1. Fetch Data
+            const [analisis, kirim, balik, stok] = await Promise.all([
+                db.from('analisis_supply_chain').select('*'),
+                db.from('monitoring_pengiriman').select('*'),
+                db.from('pengembalian_kemasan').select('*'),
+                db.from('manajemen_stok').select('*')
+            ]);
             
-            // Logic Filtering & Rendering
-            const pengiriman = res[1].data;
-            const processList = document.getElementById('process-list');
-            
-            // Filter Pengiriman On-Process
-            const active = pengiriman.filter(x => x.status_pengiriman !== 'Selesai' && x.status_pengiriman !== 'Delivered');
-            processList.innerHTML = active.map(item => `
-                <div class="p-3 border-b flex justify-between">
-                    <span class="font-medium">${item.nama_customer}</span>
+            // 2. Logic Filter On-Process
+            const active = kirim.data.filter(x => x.status_pengiriman !== 'Selesai');
+            const list = document.getElementById('active-list');
+            list.innerHTML = active.map(item => `
+                <div class="flex justify-between p-3 border rounded-lg bg-slate-50">
+                    <span class="font-bold">${item.nama_customer}</span>
                     <span class="text-amber-600 font-bold uppercase">${item.status_pengiriman}</span>
                 </div>
             `).join('');
+            
+            // 3. Update KPI
+            document.getElementById('kpi-prod').innerText = analisis.data.reduce((a,b) => a + b.total_produksi, 0);
+        }
+
+        function changeTab(id) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
+            document.getElementById('tab-' + id).classList.add('active-tab');
+            document.getElementById('btn-' + id).classList.add('nav-active');
         }
     </script>
 </body>
