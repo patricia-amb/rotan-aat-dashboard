@@ -1,12 +1,155 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart & Green Supply Chain - UMKM Rotan AAT</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart & Green Supply Chain Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-  <h1>Smart & Green Supply Chain Dashboard</h1>
-  <p>File berhasil dibuat. Gunakan file ini sebagai index.html untuk GitHub Pages.</p>
+
+<body class="bg-gray-100 font-sans">
+
+<div class="flex h-screen">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-green-900 text-white p-5">
+    <h1 class="text-2xl font-bold mb-8">Rotan AAT</h1>
+
+    <nav class="space-y-4">
+      <a href="#" class="block hover:text-green-300">Overview</a>
+      <a href="#" class="block hover:text-green-300">Inventory</a>
+      <a href="#" class="block hover:text-green-300">Shipments</a>
+      <a href="#" class="block hover:text-green-300">Green Supply Chain</a>
+      <a href="#" class="block hover:text-green-300">Reverse Logistics</a>
+      <a href="#" class="block hover:text-green-300">Analytics</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 p-6 overflow-y-auto">
+
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h2 class="text-3xl font-bold text-gray-800">Smart & Green Dashboard</h2>
+        <p class="text-gray-500">UMKM Rotan AAT</p>
+      </div>
+
+      <button class="bg-green-700 text-white px-4 py-2 rounded-lg">
+        Admin Login
+      </button>
+    </div>
+
+    <!-- Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+
+      <div class="bg-white p-5 rounded-2xl shadow">
+        <h3 class="text-gray-500">Total Products</h3>
+        <p class="text-3xl font-bold mt-2">115</p>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl shadow">
+        <h3 class="text-gray-500">Shipments</h3>
+        <p class="text-3xl font-bold mt-2">5</p>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl shadow">
+        <h3 class="text-gray-500">Carbon Emission</h3>
+        <p class="text-3xl font-bold mt-2">73.25 kg</p>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl shadow">
+        <h3 class="text-gray-500">Packaging Recycled</h3>
+        <p class="text-3xl font-bold mt-2">57 pcs</p>
+      </div>
+
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+
+      <div class="bg-white p-5 rounded-2xl shadow">
+        <h3 class="text-xl font-semibold mb-4">Shipment Distance</h3>
+        <canvas id="shipmentChart"></canvas>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl shadow">
+        <h3 class="text-xl font-semibold mb-4">Carbon Emission</h3>
+        <canvas id="carbonChart"></canvas>
+      </div>
+
+    </div>
+
+    <!-- Tables -->
+    <div class="bg-white p-5 rounded-2xl shadow mb-6">
+      <h3 class="text-xl font-semibold mb-4">Shipment Monitoring</h3>
+
+      <table class="w-full text-left">
+        <thead>
+          <tr class="border-b">
+            <th class="py-2">Customer</th>
+            <th>Destination</th>
+            <th>Distance</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr class="border-b">
+            <td class="py-2">Toko Mebel Jaya</td>
+            <td>Medan</td>
+            <td>18 km</td>
+            <td class="text-green-600">Delivered</td>
+          </tr>
+
+          <tr class="border-b">
+            <td class="py-2">Cafe Kopi Kita</td>
+            <td>Binjai</td>
+            <td>32 km</td>
+            <td class="text-yellow-600">On Delivery</td>
+          </tr>
+
+          <tr>
+            <td class="py-2">Hotel Deli Indah</td>
+            <td>Deli Serdang</td>
+            <td>45 km</td>
+            <td class="text-green-600">Delivered</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const shipmentChart = document.getElementById('shipmentChart');
+
+new Chart(shipmentChart, {
+  type: 'bar',
+  data: {
+    labels: ['Medan', 'Binjai', 'Deli Serdang', 'Tebing Tinggi', 'Kisaran'],
+    datasets: [{
+      label: 'Distance (km)',
+      data: [18, 32, 45, 78, 120]
+    }]
+  }
+});
+
+const carbonChart = document.getElementById('carbonChart');
+
+new Chart(carbonChart, {
+  type: 'line',
+  data: {
+    labels: ['Shipment 1', 'Shipment 2', 'Shipment 3', 'Shipment 4', 'Shipment 5'],
+    datasets: [{
+      label: 'CO2 Emission',
+      data: [4.5, 8, 11.25, 19.5, 30]
+    }]
+  }
+});
+</script>
+
 </body>
 </html>
