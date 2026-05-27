@@ -3,394 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rotan AAT - Smart & Green Supply Chain Dashboard</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Rotan AAT | Advanced Supply Chain System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root {
-            --primary: #065f46; 
-            --secondary: #0f172a; 
-            --accent: #d97706; 
-        }
-
-        body {
-            font-family: 'Lato', sans-serif;
-            background-color: #f8fafc;
-        }
-
-        h1, h2, h3, .font-title {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .login-bg {
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), 
-                        url('https://images.unsplash.com/photo-1596422846543-75c6fc197f07?q=80&w=1200');
-            background-size: cover;
-            background-position: center;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .active-tab {
-            display: block;
-        }
-
-        .sidebar-active {
-            background-color: var(--primary);
-            color: white;
-            border-radius: 12px;
-        }
-
-        th {
-            background-color: #f1f5f9;
-            color: #475569;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
-        }
-
-        .card-kpi {
-            transition: transform 0.2s ease;
-        }
-        .card-kpi:hover {
-            transform: translateY(-5px);
-        }
+        .login-bg { background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1596422846543-75c6fc197f07?q=80&w=2000'); background-size: cover; background-position: center; }
+        .tab-content { display: none; }
+        .active-tab { display: block; }
+        .sidebar-btn { transition: all 0.2s; }
+        .sidebar-active { background: #059669; color: white; }
     </style>
 </head>
-<body class="antialiased">
+<body class="bg-gray-50 text-slate-800">
 
     <div id="login-container" class="min-h-screen flex items-center justify-center login-bg px-4">
-        <div class="bg-white/90 backdrop-blur-md p-10 rounded-3xl shadow-2xl w-full max-w-md border border-white/20">
-            <div class="text-center mb-10">
-                <div class="w-20 h-20 bg-emerald-700 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <i class="fa-solid fa-chair text-3xl"></i>
-                </div>
-                <h1 class="text-3xl font-bold text-gray-800">Welcome to Rotan AAT Dashboard</h1>
-            </div>
-
-            <form id="loginForm" class="space-y-6">
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 uppercase mb-2 tracking-widest">Nama Pengguna (Username)</label>
-                    <input type="text" id="username" required 
-                        class="w-full px-5 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition outline-none text-sm"
-                        placeholder="admin">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 uppercase mb-2 tracking-widest">Kata Sandi (Password)</label>
-                    <input type="password" id="password" required 
-                        class="w-full px-5 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition outline-none text-sm"
-                        placeholder="admin123">
-                </div>
-                <div id="login-error" class="hidden text-red-500 text-xs font-bold bg-red-50 p-3 rounded-lg border border-red-200">
-                    <i class="fa-solid fa-circle-exclamation mr-1"></i> Username atau Password salah!
-                </div>
-                <button type="submit" 
-                    class="w-full py-4 bg-emerald-800 hover:bg-emerald-900 text-white font-bold rounded-xl shadow-lg shadow-emerald-900/30 transition flex items-center justify-center gap-2">
-                    Masuk <i class="fa-solid fa-arrow-right-long"></i>
-                </button>
+        <div class="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-sm border border-slate-100">
+            <h2 class="text-2xl font-bold text-center mb-8">Rotan AAT System</h2>
+            <form id="loginForm" class="space-y-4">
+                <input type="text" id="username" required placeholder="Username" class="w-full p-3 border rounded-xl bg-slate-50 focus:ring-2 ring-emerald-600 outline-none">
+                <input type="password" id="password" required placeholder="Password" class="w-full p-3 border rounded-xl bg-slate-50 focus:ring-2 ring-emerald-600 outline-none">
+                <button type="submit" class="w-full py-3 bg-emerald-900 text-white rounded-xl font-bold hover:bg-emerald-800 transition">MASUK</button>
             </form>
         </div>
     </div>
 
     <div id="dashboard-container" class="hidden flex min-h-screen">
-        
-        <aside class="w-72 bg-slate-900 text-slate-300 flex flex-col p-6 border-r border-slate-800 shrink-0">
-            <div class="flex items-center gap-4 mb-10 px-2">
-                <div class="bg-emerald-600 p-3 rounded-xl shadow-md">
-                    <i class="fa-solid fa-leaf text-white text-xl"></i>
-                </div>
-                <h2 class="text-xl font-bold text-white tracking-tight">Rotan AAT</h2>
-            </div>
-
-            <nav class="flex-1 space-y-2" id="nav-tabs">
-                <button onclick="showTab('beranda')" class="sidebar-btn w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold transition sidebar-active" id="btn-beranda">
-                    <i class="fa-solid fa-chart-pie w-5"></i> Beranda Utama
-                </button>
-                <button onclick="showTab('analisis')" class="sidebar-btn w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold transition hover:bg-slate-800 rounded-xl" id="btn-analisis">
-                    <i class="fa-solid fa-chart-line w-5"></i> Analisis Supply Chain
-                </button>
-                <button onclick="showTab('pengiriman')" class="sidebar-btn w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold transition hover:bg-slate-800 rounded-xl" id="btn-pengiriman">
-                    <i class="fa-solid fa-truck-fast w-5"></i> Monitoring Kirim
-                </button>
-                <button onclick="showTab('recycle')" class="sidebar-btn w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold transition hover:bg-slate-800 rounded-xl" id="btn-recycle">
-                    <i class="fa-solid fa-arrows-rotate w-5"></i> Pengembalian Kemasan
-                </button>
-                <button onclick="showTab('stok')" class="sidebar-btn w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold transition hover:bg-slate-800 rounded-xl" id="btn-stok">
-                    <i class="fa-solid fa-warehouse w-5"></i> Manajemen Stok
-                </button>
+        <aside class="w-72 bg-slate-950 text-white p-6 flex flex-col">
+            <h1 class="text-xl font-bold text-emerald-400 mb-10"><i class="fa-solid fa-leaf mr-2"></i>Rotan AAT Core</h1>
+            <nav class="space-y-2 flex-1">
+                <button onclick="showTab('beranda')" class="sidebar-btn w-full text-left p-4 rounded-xl sidebar-active" id="btn-beranda">Ringkasan Operasional</button>
+                <button onclick="showTab('analisis')" class="sidebar-btn w-full text-left p-4 rounded-xl hover:bg-slate-800" id="btn-analisis">Analisis Supply Chain</button>
+                <button onclick="showTab('pengiriman')" class="sidebar-btn w-full text-left p-4 rounded-xl hover:bg-slate-800" id="btn-pengiriman">Logistik & Distribusi</button>
+                <button onclick="showTab('recycle')" class="sidebar-btn w-full text-left p-4 rounded-xl hover:bg-slate-800" id="btn-recycle">Reverse Logistics</button>
+                <button onclick="showTab('stok')" class="sidebar-btn w-full text-left p-4 rounded-xl hover:bg-slate-800" id="btn-stok">Inventaris Rotan</button>
             </nav>
-
-            <div class="mt-auto pt-6 border-t border-slate-800">
-                <div class="flex items-center gap-3 px-2 mb-6">
-                    <div class="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center font-bold text-white">AD</div>
-                    <div class="text-xs">
-                        <p class="font-bold text-slate-100">Administrator</p>
-                        <p class="text-slate-500">UMKM Kelompok 5</p>
-                    </div>
-                </div>
-                <button onclick="logout()" class="w-full py-3 text-xs font-bold text-rose-500 bg-rose-500/10 rounded-xl hover:bg-rose-500/20 transition">
-                    <i class="fa-solid fa-right-from-bracket mr-2"></i> KELUAR SISTEM
-                </button>
-            </div>
         </aside>
 
-        <main class="flex-1 overflow-y-auto p-10">
-            <header class="flex justify-between items-center mb-10">
-                <h2 id="header-title" class="text-2xl font-bold text-gray-800">Beranda Utama Dashboard</h2>
-                <div class="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold">
-                    <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> SINKRONISASI CLOUD AKTIF
-                </div>
+        <main class="flex-1 p-10 overflow-y-auto">
+            <header class="flex justify-between items-center mb-8">
+                <h2 id="header-title" class="text-3xl font-bold">Ringkasan Operasional</h2>
+                <div id="sync-status" class="text-xs font-bold bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full">SISTEM AKTIF</div>
             </header>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10" id="kpi-section">
-                <div class="card-kpi bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">Total Produksi</p>
-                    <h3 class="text-3xl font-bold text-gray-900" id="stat-produksi">0</h3>
-                    <p class="text-[10px] text-emerald-600 mt-2 font-bold"><i class="fa-solid fa-arrow-up mr-1"></i> Data Real Terintegrasi</p>
+            <div id="tab-beranda" class="tab-content active-tab space-y-6">
+                <div class="grid grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100"><p class="text-xs text-slate-400">Total Produksi</p><h3 class="text-2xl font-bold" id="kpi-prod">0</h3></div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100"><p class="text-xs text-slate-400">Jejak Karbon (Kg)</p><h3 class="text-2xl font-bold" id="kpi-co2">0</h3></div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100"><p class="text-xs text-slate-400">Ritase</p><h3 class="text-2xl font-bold" id="kpi-rit">0</h3></div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100"><p class="text-xs text-slate-400">Stok Produk</p><h3 class="text-2xl font-bold" id="kpi-stok">0</h3></div>
                 </div>
-                <div class="card-kpi bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">Jejak Karbon</p>
-                    <h3 class="text-3xl font-bold text-rose-600" id="stat-emisi">0 <span class="text-sm">Kg</span></h3>
-                    <p class="text-[10px] text-gray-400 mt-2 font-bold">Total CO₂ Operasional</p>
-                </div>
-                <div class="card-kpi bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">Reduksi Limbah</p>
-                    <h3 class="text-3xl font-bold text-emerald-700" id="stat-recycle">0 <span class="text-sm">Kg</span></h3>
-                    <p class="text-[10px] text-emerald-600 mt-2 font-bold"><i class="fa-solid fa-recycle mr-1"></i> Reverse Logistics</p>
-                </div>
-                <div class="card-kpi bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">Ketersediaan Stok</p>
-                    <h3 class="text-3xl font-bold text-amber-600" id="stat-stok">0</h3>
-                    <p class="text-[10px] text-gray-400 mt-2 font-bold">Total Unit di Gudang</p>
-                </div>
-            </div>
-
-            <div id="content-area">
                 
-                <section id="tab-beranda" class="tab-content active-tab space-y-6">
-                    <div class="bg-emerald-900 text-white p-10 rounded-3xl shadow-xl relative overflow-hidden">
-                        <div class="relative z-10">
-                            <h3 class="text-3xl font-bold mb-4">Selamat Datang di Rotan AAT Dashboard</h3>
-                            <p class="max-w-2xl text-emerald-100 text-sm leading-relaxed">Sistem ini memfasilitasi transformasi digital UMKM dengan menyediakan pemantauan terpadu untuk rantai pasok cerdas (Smart Supply Chain) dan operasional ramah lingkungan (Green Logistics)[cite: 25, 30]. Pantau efisiensi jejak karbon [cite: 29], monitoring pengiriman [cite: 27], strategi logistik balik[cite: 28], dan optimasi stok bahan baku secara aktual.</p>
-                        </div>
-                        <i class="fa-solid fa-chair absolute -right-10 -bottom-10 text-[200px] text-white/10 rotate-12"></i>
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border">
+                        <h3 class="font-bold mb-4">Pengiriman On-Process</h3>
+                        <div id="process-list" class="space-y-2 text-sm"></div>
                     </div>
-                </section>
-
-                <section id="tab-analisis" class="tab-content space-y-4">
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                        <table class="w-full text-left">
-                            <thead>
-                                <tr class="border-b">
-                                    <th class="p-6">Bulan</th>
-                                    <th class="p-6">Produksi</th>
-                                    <th class="p-6">Pengiriman</th>
-                                    <th class="p-6">Biaya Distribusi</th>
-                                    <th class="p-6">Emisi CO2</th>
-                                    <th class="p-6">Kemasan Reuse</th>
-                                </tr>
-                            </thead>
-                            <tbody id="data-analisis" class="text-sm text-gray-600 divide-y divide-gray-50"></tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <section id="tab-pengiriman" class="tab-content space-y-4">
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                        <table class="w-full text-left">
-                            <thead>
-                                <tr class="border-b">
-                                    <th class="p-6">ID Pengiriman</th>
-                                    <th class="p-6">Nama Customer</th>
-                                    <th class="p-6">Tujuan</th>
-                                    <th class="p-6">Jarak (KM)</th>
-                                    <th class="p-6">Status Logistik</th>
-                                    <th class="p-6">Estimasi Emisi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="data-pengiriman" class="text-sm text-gray-600 divide-y divide-gray-50"></tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <section id="tab-recycle" class="tab-content space-y-4">
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                        <table class="w-full text-left">
-                            <thead>
-                                <tr class="border-b">
-                                    <th class="p-6">ID Recycle</th>
-                                    <th class="p-6">Jenis Kemasan</th>
-                                    <th class="p-6">Jumlah Kembali</th>
-                                    <th class="p-6">Status Recovery</th>
-                                    <th class="p-6">Reduksi Limbah</th>
-                                    <th class="p-6">Keterangan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="data-recycle" class="text-sm text-gray-600 divide-y divide-gray-50"></tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <section id="tab-stok" class="tab-content space-y-4">
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                        <table class="w-full text-left">
-                            <thead>
-                                <tr class="border-b">
-                                    <th class="p-6">Kode</th>
-                                    <th class="p-6">Nama Produk</th>
-                                    <th class="p-6">Kategori</th>
-                                    <th class="p-6">Stok Saat Ini</th>
-                                    <th class="p-6">Supplier</th>
-                                    <th class="p-6">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="data-stok" class="text-sm text-gray-600 divide-y divide-gray-50"></tbody>
-                        </table>
-                    </div>
-                </section>
-
+                </div>
             </div>
-        </main>
+
+            </main>
     </div>
 
     <script>
-        // KREDENSIAL CLOUD SUPABASE
-        const SUPABASE_URL = "https://rghfqhdqnoduwnbgufca.supabase.co";
-        const SUPABASE_ANON_KEY = "PASTE_ANON_PUBLIC_KEY_KAMU_DI_SINI";
+        const SUPABASE_URL = "ISI_URL_SUPABASE_MU";
+        const SUPABASE_KEY = "ISI_KEY_SUPABASE_MU";
+        const _db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const _supabase = window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_ANON_KEY
-        );
-
-        // LOGIN VALIDATION
-        const loginForm = document.getElementById('loginForm');
-        loginForm.addEventListener('submit', function(e) {
+        // LOGIN ENGINE
+        document.getElementById('loginForm').onsubmit = (e) => {
             e.preventDefault();
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            const errorMsg = document.getElementById('login-error');
-
-            if (user === "admin" && pass === "admin123") {
+            if(document.getElementById('username').value === "admin" && document.getElementById('password').value === "admin123") {
                 document.getElementById('login-container').classList.add('hidden');
                 document.getElementById('dashboard-container').classList.remove('hidden');
-                initDashboard();
-            } else {
-                errorMsg.classList.remove('hidden');
+                initEngine();
             }
-        });
+        };
 
-        function logout() {
-            location.reload();
+        // NAVIGATION ENGINE
+        function showTab(id) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
+            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('sidebar-active'));
+            document.getElementById('tab-' + id).classList.add('active-tab');
+            document.getElementById('btn-' + id).classList.add('sidebar-active');
         }
 
-        // TAB SWITCHING ACTIVE CONTROL
-        function showTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(section => {
-                section.classList.remove('active-tab');
-            });
-            document.querySelectorAll('.sidebar-btn').forEach(btn => {
-                btn.classList.remove('sidebar-active');
-                btn.classList.add('hover:bg-slate-800');
-            });
-
-            document.getElementById('tab-' + tabId).classList.add('active-tab');
-            document.getElementById('btn-' + tabId).classList.add('sidebar-active');
-            document.getElementById('btn-' + tabId).classList.remove('hover:bg-slate-800');
-
-            const titles = {
-                beranda: "Beranda Utama Dashboard",
-                analisis: "Analisis Supply Chain & Emisi",
-                pengiriman: "Monitoring Logistik Pengiriman",
-                recycle: "Laporan Reverse Logistics & Pengembalian Kemasan",
-                stok: "Manajemen Inventaris Gudang"
-            };
-            document.getElementById('header-title').innerText = titles[tabId];
-        }
-
-        // AMBIL DATA PARALEL DARI SUPABASE
-        async function initDashboard() {
-            const [analisis, pengiriman, recycle, stok] = await Promise.all([
-                _supabase.from('analisis_supply_chain').select('*'),
-                _supabase.from('monitoring_pengiriman').select('*'),
-                _supabase.from('pengembalian_kemasan').select('*'),
-                _supabase.from('manajemen_stok').select('*')
-            ]);
-
-            // Render Analisis Supply Chain
-            if (analisis.data) {
-                const tbody = document.getElementById('data-analisis');
-                tbody.innerHTML = analisis.data.map(row => `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="p-6 font-bold text-gray-800">${row.bulan}</td>
-                        <td class="p-6">${row.total_produksi} unit</td>
-                        <td class="p-6">${row.total_pengiriman} rit</td>
-                        <td class="p-6">Rp ${parseInt(row.biaya_distribusi).toLocaleString()}</td>
-                        <td class="p-6 font-bold text-rose-600">${row.total_emisi_co2} Kg</td>
-                        <td class="p-6 text-emerald-600 font-bold">${row.kemasan_reused} unit</td>
-                    </tr>
-                `).join('');
-
-                // Update KPI Card
-                document.getElementById('stat-produksi').innerText = analisis.data.reduce((a, b) => a + b.total_produksi, 0);
-                document.getElementById('stat-emisi').innerText = analisis.data.reduce((a, b) => a + parseFloat(b.total_emisi_co2), 0).toFixed(1);
-            }
-
-            // Render Monitoring Pengiriman
-            if (pengiriman.data) {
-                document.getElementById('data-pengiriman').innerHTML = pengiriman.data.map(row => `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="p-6 font-mono font-bold text-emerald-700">${row.id_pengiriman}</td>
-                        <td class="p-6 font-bold text-gray-800">${row.nama_customer}</td>
-                        <td class="p-6">${row.tujuan}</td>
-                        <td class="p-6">${row.jarak_km} KM</td>
-                        <td class="p-6">
-                            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase ${row.status_pengiriman === 'Selesai' || row.status_pengiriman === 'Delivered' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${row.status_pengiriman}</span>
-                        </td>
-                        <td class="p-6 font-bold text-rose-500">${row.estimasi_emisi_co2} Kg</td>
-                    </tr>
-                `).join('');
-            }
-
-            // Render Pengembalian Kemasan
-            if (recycle.data) {
-                document.getElementById('data-recycle').innerHTML = recycle.data.map(row => `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="p-6 font-mono text-slate-500">${row.id_recycle}</td>
-                        <td class="p-6 font-bold text-gray-800">${row.jenis_kemasan}</td>
-                        <td class="p-6">${row.jumlah_dikembalikan} pcs</td>
-                        <td class="p-6"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-bold">${row.status_recovery}</span></td>
-                        <td class="p-6 text-emerald-700 font-bold">+ ${row.pengurangan_limbah_kg} Kg</td>
-                        <td class="p-6 text-xs italic">${row.keterangan || '-'}</td>
-                    </tr>
-                `).join('');
-                document.getElementById('stat-recycle').innerText = recycle.data.reduce((a, b) => a + parseFloat(b.pengurangan_limbah_kg), 0);
-            }
-
-            // Render Manajemen Stok
-            if (stok.data) {
-                document.getElementById('data-stok').innerHTML = stok.data.map(row => `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="p-6 font-mono font-bold text-emerald-700">${row.kode_produk}</td>
-                        <td class="p-6 font-bold text-gray-800">${row.nama_produk}</td>
-                        <td class="p-6 text-xs font-semibold text-slate-600"><span class="bg-slate-100 px-2 py-1 rounded">${row.kategori}</span></td>
-                        <td class="p-6 font-bold ${row.stok_saat_ini < 15 ? 'text-rose-600 animate-pulse' : 'text-gray-800'}">${row.stok_saat_ini} pcs</td>
-                        <td class="p-6 text-gray-500 text-xs">${row.supplier}</td>
-                        <td class="p-6">
-                            <span class="px-2 py-1 rounded text-[10px] font-bold uppercase ${row.status_stok === 'Aman' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">${row.status_stok}</span>
-                        </td>
-                    </tr>
-                `).join('');
-                document.getElementById('stat-stok').innerText = stok.data.reduce((a, b) => a + b.stok_saat_ini, 0);
-            }
+        // DATA ENGINE
+        async function initEngine() {
+            // Fetch dari 4 tabel Supabase
+            const tables = ['analisis_supply_chain', 'monitoring_pengiriman', 'pengembalian_kemasan', 'manajemen_stok'];
+            const res = await Promise.all(tables.map(t => _db.from(t).select('*')));
+            
+            // Logic Filtering & Rendering
+            const pengiriman = res[1].data;
+            const processList = document.getElementById('process-list');
+            
+            // Filter Pengiriman On-Process
+            const active = pengiriman.filter(x => x.status_pengiriman !== 'Selesai' && x.status_pengiriman !== 'Delivered');
+            processList.innerHTML = active.map(item => `
+                <div class="p-3 border-b flex justify-between">
+                    <span class="font-medium">${item.nama_customer}</span>
+                    <span class="text-amber-600 font-bold uppercase">${item.status_pengiriman}</span>
+                </div>
+            `).join('');
         }
     </script>
 </body>
