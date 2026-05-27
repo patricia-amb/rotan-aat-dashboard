@@ -1,154 +1,567 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart & Green Supply Chain Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rotan AAT Dashboard</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .login-bg {
+      background-image:
+        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+        url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1600&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .menu-item {
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .menu-item:hover {
+      background: #166534;
+      transform: translateX(4px);
+    }
+
+    .section {
+      display: none;
+    }
+
+    .active {
+      display: block;
+    }
+
+    .card-hover {
+      transition: 0.3s;
+    }
+
+    .card-hover:hover {
+      transform: translateY(-5px);
+    }
+  </style>
 </head>
 
-<body class="bg-gray-100 font-sans">
+<body class="bg-slate-100">
 
-<div class="flex h-screen">
+<!-- LOGIN -->
+<div id="loginPage" class="login-bg min-h-screen flex items-center justify-center p-5">
 
-  <!-- Sidebar -->
-  <aside class="w-64 bg-green-900 text-white p-5">
-    <h1 class="text-2xl font-bold mb-8">Rotan AAT</h1>
+  <div class="bg-white/95 backdrop-blur-lg w-full max-w-md rounded-3xl shadow-2xl p-8">
 
-    <nav class="space-y-4">
-      <a href="#" class="block hover:text-green-300">Overview</a>
-      <a href="#" class="block hover:text-green-300">Inventory</a>
-      <a href="#" class="block hover:text-green-300">Shipments</a>
-      <a href="#" class="block hover:text-green-300">Green Supply Chain</a>
-      <a href="#" class="block hover:text-green-300">Reverse Logistics</a>
-      <a href="#" class="block hover:text-green-300">Analytics</a>
-    </nav>
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-black text-green-900 mb-3">
+        ROTAN AAT
+      </h1>
+
+      <p class="text-gray-600 text-lg">
+        Smart & Green Supply Chain Dashboard
+      </p>
+    </div>
+
+    <div class="space-y-5">
+
+      <div>
+        <label class="font-semibold text-gray-700">Username</label>
+        <input type="text" id="username"
+          class="w-full mt-2 border rounded-2xl p-4 focus:ring-2 focus:ring-green-700 outline-none"
+          placeholder="Masukkan username">
+      </div>
+
+      <div>
+        <label class="font-semibold text-gray-700">Password</label>
+        <input type="password" id="password"
+          class="w-full mt-2 border rounded-2xl p-4 focus:ring-2 focus:ring-green-700 outline-none"
+          placeholder="Masukkan password">
+      </div>
+
+      <button onclick="login()"
+        class="w-full bg-green-800 hover:bg-green-900 text-white py-4 rounded-2xl font-bold text-lg">
+        Masuk Dashboard
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboardPage" class="hidden min-h-screen md:flex">
+
+  <!-- SIDEBAR -->
+  <aside class="w-full md:w-72 bg-green-950 text-white p-5">
+
+    <div class="mb-10">
+      <h1 class="text-3xl font-black">ROTAN AAT</h1>
+      <p class="text-green-200 mt-2 text-sm">
+        Smart Supply Chain System
+      </p>
+    </div>
+
+    <div class="space-y-3 text-[15px] font-medium">
+
+      <div onclick="showSection('dashboard')" class="menu-item p-4 rounded-2xl bg-green-800">
+        📊 Dashboard Utama
+      </div>
+
+      <div onclick="showSection('stok')" class="menu-item p-4 rounded-2xl">
+        📦 Manajemen Stok
+      </div>
+
+      <div onclick="showSection('pengiriman')" class="menu-item p-4 rounded-2xl">
+        🚚 Monitoring Pengiriman
+      </div>
+
+      <div onclick="showSection('emisi')" class="menu-item p-4 rounded-2xl">
+        🌱 Kalkulator Emisi CO₂
+      </div>
+
+      <div onclick="showSection('kemasan')" class="menu-item p-4 rounded-2xl">
+        ♻️ Pengembalian Kemasan
+      </div>
+
+      <div onclick="showSection('analisis')" class="menu-item p-4 rounded-2xl">
+        📈 Analisis & Rekomendasi
+      </div>
+
+      <div onclick="logout()" class="menu-item mt-10 p-4 rounded-2xl bg-red-700">
+        🚪 Logout
+      </div>
+
+    </div>
+
   </aside>
 
-  <!-- Main -->
-  <main class="flex-1 p-6 overflow-y-auto">
+  <!-- MAIN -->
+  <main class="flex-1 p-5 md:p-8 overflow-y-auto">
 
-    <div class="flex justify-between items-center mb-6">
-      <div>
-        <h2 class="text-3xl font-bold text-gray-800">Smart & Green Dashboard</h2>
-        <p class="text-gray-500">UMKM Rotan AAT</p>
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="section active">
+
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+
+        <div>
+          <h2 class="text-4xl font-black text-slate-800">
+            Dashboard Utama
+          </h2>
+
+          <p class="text-gray-500 mt-2">
+            Monitoring Smart & Green Supply Chain UMKM Rotan
+          </p>
+        </div>
+
+        <div class="bg-white px-5 py-3 rounded-2xl shadow-lg">
+          <p class="text-sm text-gray-500">Admin Login</p>
+          <p class="font-bold">Patricia Yosefine</p>
+        </div>
+
       </div>
 
-      <button class="bg-green-700 text-white px-4 py-2 rounded-lg">
-        Admin Login
-      </button>
-    </div>
+      <!-- CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
 
-    <!-- Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="card-hover bg-white rounded-3xl p-6 shadow-lg">
+          <p class="text-gray-500">Total Produk</p>
+          <h3 class="text-5xl font-black text-green-800 mt-3">115</h3>
+          <p class="text-sm text-green-700 mt-3">+12% bulan ini</p>
+        </div>
 
-      <div class="bg-white p-5 rounded-2xl shadow">
-        <h3 class="text-gray-500">Total Products</h3>
-        <p class="text-3xl font-bold mt-2">115</p>
+        <div class="card-hover bg-white rounded-3xl p-6 shadow-lg">
+          <p class="text-gray-500">Pengiriman Aktif</p>
+          <h3 class="text-5xl font-black text-blue-700 mt-3">5</h3>
+          <p class="text-sm text-blue-700 mt-3">2 sedang dikirim</p>
+        </div>
+
+        <div class="card-hover bg-white rounded-3xl p-6 shadow-lg">
+          <p class="text-gray-500">Emisi CO₂</p>
+          <h3 class="text-5xl font-black text-red-600 mt-3">73</h3>
+          <p class="text-sm text-red-600 mt-3">kg CO₂ / bulan</p>
+        </div>
+
+        <div class="card-hover bg-white rounded-3xl p-6 shadow-lg">
+          <p class="text-gray-500">Kemasan Reused</p>
+          <h3 class="text-5xl font-black text-yellow-600 mt-3">57</h3>
+          <p class="text-sm text-yellow-600 mt-3">Packaging berhasil reuse</p>
+        </div>
+
       </div>
 
-      <div class="bg-white p-5 rounded-2xl shadow">
-        <h3 class="text-gray-500">Shipments</h3>
-        <p class="text-3xl font-bold mt-2">5</p>
+      <!-- CHART -->
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+        <div class="bg-white rounded-3xl shadow-lg p-6">
+          <h3 class="text-2xl font-bold mb-5">Distribusi Pengiriman</h3>
+          <canvas id="shipmentChart"></canvas>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-lg p-6">
+          <h3 class="text-2xl font-bold mb-5">Emisi Karbon</h3>
+          <canvas id="carbonChart"></canvas>
+        </div>
+
       </div>
 
-      <div class="bg-white p-5 rounded-2xl shadow">
-        <h3 class="text-gray-500">Carbon Emission</h3>
-        <p class="text-3xl font-bold mt-2">73.25 kg</p>
+    </section>
+
+    <!-- STOK -->
+    <section id="stok" class="section">
+
+      <h2 class="text-4xl font-black mb-8">Manajemen Stok</h2>
+
+      <div class="bg-white rounded-3xl shadow-lg p-6 mb-8">
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+          <input id="namaProduk" type="text" placeholder="Nama Produk"
+            class="border rounded-2xl p-4">
+
+          <input id="jumlahStok" type="number" placeholder="Jumlah Stok"
+            class="border rounded-2xl p-4">
+
+          <button onclick="tambahProduk()"
+            class="bg-green-800 hover:bg-green-900 text-white rounded-2xl p-4 font-bold">
+            Tambah Produk
+          </button>
+
+        </div>
+
       </div>
 
-      <div class="bg-white p-5 rounded-2xl shadow">
-        <h3 class="text-gray-500">Packaging Recycled</h3>
-        <p class="text-3xl font-bold mt-2">57 pcs</p>
+      <div class="bg-white rounded-3xl shadow-lg overflow-x-auto">
+
+        <table class="w-full">
+
+          <thead class="bg-green-900 text-white">
+            <tr>
+              <th class="p-5 text-left">Produk</th>
+              <th class="p-5 text-left">Stok</th>
+            </tr>
+          </thead>
+
+          <tbody id="tabelProduk">
+            <tr class="border-b">
+              <td class="p-5">Kursi Rotan Minimalis</td>
+              <td class="p-5">18</td>
+            </tr>
+          </tbody>
+
+        </table>
+
       </div>
 
-    </div>
+    </section>
 
-    <!-- Charts -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <!-- PENGIRIMAN -->
+    <section id="pengiriman" class="section">
 
-      <div class="bg-white p-5 rounded-2xl shadow">
-        <h3 class="text-xl font-semibold mb-4">Shipment Distance</h3>
-        <canvas id="shipmentChart"></canvas>
+      <h2 class="text-4xl font-black mb-8">Monitoring Pengiriman</h2>
+
+      <div class="bg-white rounded-3xl shadow-lg overflow-x-auto p-5">
+
+        <table class="w-full">
+
+          <thead>
+            <tr class="bg-slate-100 border-b">
+              <th class="p-5 text-left">Pelanggan</th>
+              <th class="p-5 text-left">Tujuan</th>
+              <th class="p-5 text-left">Jarak</th>
+              <th class="p-5 text-left">Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr class="border-b">
+              <td class="p-5">Cafe Kopi Kita</td>
+              <td class="p-5">Binjai</td>
+              <td class="p-5">32 km</td>
+              <td class="p-5 text-yellow-600 font-bold">On Delivery</td>
+            </tr>
+
+            <tr class="border-b">
+              <td class="p-5">Hotel Deli Indah</td>
+              <td class="p-5">Deli Serdang</td>
+              <td class="p-5">45 km</td>
+              <td class="p-5 text-green-700 font-bold">Delivered</td>
+            </tr>
+
+            <tr>
+              <td class="p-5">Decor House</td>
+              <td class="p-5">Kisaran</td>
+              <td class="p-5">120 km</td>
+              <td class="p-5 text-blue-700 font-bold">Pending</td>
+            </tr>
+          </tbody>
+
+        </table>
+
       </div>
 
-      <div class="bg-white p-5 rounded-2xl shadow">
-        <h3 class="text-xl font-semibold mb-4">Carbon Emission</h3>
-        <canvas id="carbonChart"></canvas>
+    </section>
+
+    <!-- EMISI -->
+    <section id="emisi" class="section">
+
+      <h2 class="text-4xl font-black mb-8">Kalkulator Emisi CO₂</h2>
+
+      <div class="bg-white rounded-3xl shadow-lg p-6 max-w-3xl">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <div>
+            <label class="font-bold">Jarak Pengiriman (km)</label>
+            <input type="number" id="jarak"
+              class="w-full mt-3 border rounded-2xl p-4"
+              placeholder="Contoh: 45">
+          </div>
+
+          <div>
+            <label class="font-bold">Faktor Emisi Kendaraan</label>
+            <input type="number" id="faktor" value="0.25"
+              class="w-full mt-3 border rounded-2xl p-4">
+          </div>
+
+        </div>
+
+        <button onclick="hitungEmisi()"
+          class="mt-6 bg-green-800 hover:bg-green-900 text-white px-8 py-4 rounded-2xl font-bold">
+          Hitung Emisi
+        </button>
+
+        <div class="mt-8 bg-slate-100 rounded-3xl p-6">
+          <p class="text-xl font-semibold">Hasil Emisi Karbon</p>
+
+          <h3 id="hasilEmisi"
+            class="text-5xl font-black text-red-600 mt-3">
+            0 kg CO₂
+          </h3>
+        </div>
+
       </div>
 
-    </div>
+    </section>
 
-    <!-- Tables -->
-    <div class="bg-white p-5 rounded-2xl shadow mb-6">
-      <h3 class="text-xl font-semibold mb-4">Shipment Monitoring</h3>
+    <!-- KEMASAN -->
+    <section id="kemasan" class="section">
 
-      <table class="w-full text-left">
-        <thead>
-          <tr class="border-b">
-            <th class="py-2">Customer</th>
-            <th>Destination</th>
-            <th>Distance</th>
-            <th>Status</th>
-          </tr>
-        </thead>
+      <h2 class="text-4xl font-black mb-8">Pengembalian Kemasan</h2>
 
-        <tbody>
-          <tr class="border-b">
-            <td class="py-2">Toko Mebel Jaya</td>
-            <td>Medan</td>
-            <td>18 km</td>
-            <td class="text-green-600">Delivered</td>
-          </tr>
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
-          <tr class="border-b">
-            <td class="py-2">Cafe Kopi Kita</td>
-            <td>Binjai</td>
-            <td>32 km</td>
-            <td class="text-yellow-600">On Delivery</td>
-          </tr>
+        <div class="bg-white rounded-3xl shadow-lg p-6">
 
-          <tr>
-            <td class="py-2">Hotel Deli Indah</td>
-            <td>Deli Serdang</td>
-            <td>45 km</td>
-            <td class="text-green-600">Delivered</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+          <h3 class="text-2xl font-bold mb-5">Input Kemasan</h3>
+
+          <div class="space-y-5">
+
+            <input type="text" id="jenisKemasan"
+              placeholder="Jenis Kemasan"
+              class="w-full border rounded-2xl p-4">
+
+            <input type="number" id="jumlahKemasan"
+              placeholder="Jumlah Kemasan"
+              class="w-full border rounded-2xl p-4">
+
+            <button onclick="tambahKemasan()"
+              class="bg-green-800 hover:bg-green-900 text-white px-6 py-4 rounded-2xl font-bold w-full">
+              Simpan Data
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-lg overflow-x-auto p-5">
+
+          <table class="w-full">
+
+            <thead>
+              <tr class="bg-slate-100 border-b">
+                <th class="p-4 text-left">Kemasan</th>
+                <th class="p-4 text-left">Jumlah</th>
+              </tr>
+            </thead>
+
+            <tbody id="tabelKemasan">
+              <tr>
+                <td class="p-4">Kardus Besar</td>
+                <td class="p-4">15</td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ANALISIS -->
+    <section id="analisis" class="section">
+
+      <h2 class="text-4xl font-black mb-8">Analisis & Rekomendasi</h2>
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+        <div class="bg-white rounded-3xl shadow-lg p-6">
+
+          <h3 class="text-2xl font-bold mb-5">Rekomendasi Sistem</h3>
+
+          <div class="space-y-4 text-gray-700 leading-relaxed">
+            <div class="bg-green-50 border-l-4 border-green-700 p-4 rounded-xl">
+              Gabungkan pengiriman area Medan dan Binjai untuk mengurangi biaya distribusi.
+            </div>
+
+            <div class="bg-blue-50 border-l-4 border-blue-700 p-4 rounded-xl">
+              Tingkatkan produksi keranjang rotan karena permintaan meningkat 15%.
+            </div>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-600 p-4 rounded-xl">
+              Gunakan kembali bubble wrap yang masih layak pakai.
+            </div>
+
+            <div class="bg-red-50 border-l-4 border-red-700 p-4 rounded-xl">
+              Kurangi pengiriman dengan kendaraan setengah kosong.
+            </div>
+          </div>
+
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-lg p-6">
+          <h3 class="text-2xl font-bold mb-5">Forecast Produksi</h3>
+          <canvas id="forecastChart"></canvas>
+        </div>
+
+      </div>
+
+    </section>
 
   </main>
+
 </div>
 
 <script>
-const shipmentChart = document.getElementById('shipmentChart');
 
-new Chart(shipmentChart, {
+function login() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  if(username && password) {
+    document.getElementById('loginPage').classList.add('hidden');
+    document.getElementById('dashboardPage').classList.remove('hidden');
+  } else {
+    alert('Masukkan username dan password');
+  }
+}
+
+function logout() {
+  document.getElementById('dashboardPage').classList.add('hidden');
+  document.getElementById('loginPage').classList.remove('hidden');
+}
+
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(section => {
+    section.classList.remove('active');
+  });
+
+  document.getElementById(id).classList.add('active');
+}
+
+function hitungEmisi() {
+  const jarak = parseFloat(document.getElementById('jarak').value);
+  const faktor = parseFloat(document.getElementById('faktor').value);
+
+  const hasil = jarak * faktor;
+
+  document.getElementById('hasilEmisi').innerText = hasil.toFixed(2) + ' kg CO₂';
+}
+
+function tambahProduk() {
+  const nama = document.getElementById('namaProduk').value;
+  const stok = document.getElementById('jumlahStok').value;
+
+  if(nama && stok) {
+
+    const row = `
+      <tr class="border-b">
+        <td class="p-5">${nama}</td>
+        <td class="p-5">${stok}</td>
+      </tr>
+    `;
+
+    document.getElementById('tabelProduk').innerHTML += row;
+
+    document.getElementById('namaProduk').value = '';
+    document.getElementById('jumlahStok').value = '';
+  }
+}
+
+function tambahKemasan() {
+  const jenis = document.getElementById('jenisKemasan').value;
+  const jumlah = document.getElementById('jumlahKemasan').value;
+
+  if(jenis && jumlah) {
+
+    const row = `
+      <tr>
+        <td class="p-4">${jenis}</td>
+        <td class="p-4">${jumlah}</td>
+      </tr>
+    `;
+
+    document.getElementById('tabelKemasan').innerHTML += row;
+
+    document.getElementById('jenisKemasan').value = '';
+    document.getElementById('jumlahKemasan').value = '';
+  }
+}
+
+new Chart(document.getElementById('shipmentChart'), {
   type: 'bar',
   data: {
     labels: ['Medan', 'Binjai', 'Deli Serdang', 'Tebing Tinggi', 'Kisaran'],
     datasets: [{
-      label: 'Distance (km)',
-      data: [18, 32, 45, 78, 120]
+      label: 'Jarak Pengiriman',
+      data: [18, 32, 45, 78, 120],
+      borderRadius: 12
     }]
   }
 });
 
-const carbonChart = document.getElementById('carbonChart');
-
-new Chart(carbonChart, {
+new Chart(document.getElementById('carbonChart'), {
   type: 'line',
   data: {
-    labels: ['Shipment 1', 'Shipment 2', 'Shipment 3', 'Shipment 4', 'Shipment 5'],
+    labels: ['Pengiriman 1', 'Pengiriman 2', 'Pengiriman 3', 'Pengiriman 4', 'Pengiriman 5'],
     datasets: [{
-      label: 'CO2 Emission',
-      data: [4.5, 8, 11.25, 19.5, 30]
+      label: 'Emisi CO₂',
+      data: [4.5, 8, 11.25, 19.5, 30],
+      tension: 0.4,
+      borderWidth: 3
     }]
   }
 });
+
+new Chart(document.getElementById('forecastChart'), {
+  type: 'line',
+  data: {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+    datasets: [{
+      label: 'Forecast Produksi',
+      data: [20, 25, 28, 30, 35, 40],
+      tension: 0.4,
+      borderWidth: 3
+    }]
+  }
+});
+
 </script>
 
 </body>
